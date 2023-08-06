@@ -6,15 +6,20 @@ const startingTime = ref("hours" | "minutes" | "seconds");
 // setting the state of which the time is
 const state = ref<"stopped" | "running" | "paused">("stopped");
 
-function Start() {
+const interval = ref<number | undefined>(undefined);
+
+function start() {
+  state.value = "running";
+  interval.value = setInterval(() => {
+    startingTime.value--;
+  }, 1000);
+}
+
+function pause() {
 
 }
 
-function Pause() {
-
-}
-
-function Reset() {
+function reset() {
 
 }
 
@@ -40,9 +45,10 @@ function formatTime(startingTime: number) {
         <input type="number" id="seconds" min="0" max="60" />
       </div>
       <div class="but-div">
-        <button>Start</button>
-        <button>Pause</button>
-        <button>Reset</button>
+        <button v-if="state === 'stopped'" @click="start">Start</button>
+        <button v-if="state === 'running'" @click="pause">Pause</button>
+        <button v-if="state === 'paused'" @click="start">Resume</button>
+        <button v-if="state === 'running' || state === 'paused'" @click="reset">Reset</button>
       </div>
   </div>
 </template>
