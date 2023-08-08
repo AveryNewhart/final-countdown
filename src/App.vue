@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, Ref } from 'vue';
 
 const hours = ref(0);
 const minutes = ref(0);
 const seconds = ref(0);
 
 // Combine hours, minutes, and seconds to calculate the starting time in seconds
-const startingTime = computed(() => hours.value * 3600 + minutes.value * 60 + seconds.value);
+const startingTime: Ref<number>  = computed(() => hours.value * 3600 + minutes.value * 60 + seconds.value);
 
 // setting the state of which the time is
 const state = ref<"stopped" | "running" | "paused">("stopped");
@@ -16,16 +16,22 @@ const interval = ref<number | undefined>(undefined);
 function start() {
   state.value = "running";
   interval.value = setInterval(() => {
-    startingTime.value--;
+    startingTime.value = startingTime.value - 1;
   }, 1000);
 }
 
 function pause() {
-
+  state.value = "paused";
+  // pause the interval
+  clearInterval(interval.value);
 }
 
 function reset() {
-
+  state.value = "stopped";
+  clearInterval(interval.value);
+  hours.value = 0;
+  minutes.value = 0;
+  seconds.value = 0;
 }
 
 // Watch for changes in the startingTime, and reset the timer if it reaches 0
@@ -35,10 +41,10 @@ watch(startingTime, (newVal) => {
   }
 });
 
-function formatTime(timeInSeconds: number) {
-  const hours = `0${Math.floor(timeInSeconds / 3600)}`.slice(-2);
-  const minutes = `0${Math.floor((timeInSeconds % 3600) / 60)}`.slice(-2);
-  const seconds = `0${timeInSeconds % 60}`.slice(-2);
+function formatTime(startingTime: number) {
+  const hours = `0${Math.floor(startingTime / 3600)}`.slice(-2);
+  const minutes = `0${Math.floor((startingTime % 3600) / 60)}`.slice(-2);
+  const seconds = `0${startingTime % 60}`.slice(-2);
   return `${hours}:${minutes}:${seconds}`;
 }
 
