@@ -6,17 +6,19 @@ const minutes = ref(0);
 const seconds = ref(0);
 
 // Combine hours, minutes, and seconds to calculate the starting time in seconds
-const startingTime: Ref<number>  = computed(() => hours.value * 3600 + minutes.value * 60 + seconds.value);
+const startingTime: Ref<number> = computed(() => hours.value * 3600 + minutes.value * 60 + seconds.value);
+const currentTime = ref(startingTime.value); // Create a separate ref for current time
 
 // setting the state of which the time is
 const state = ref<"stopped" | "running" | "paused">("stopped");
 
 const interval = ref<number | undefined>(undefined);
 
-function start() {
+  function start() {
   state.value = "running";
+  currentTime.value = startingTime.value; // Initialize currentTime with startingTime
   interval.value = setInterval(() => {
-    startingTime.value = startingTime.value - 1;
+    currentTime.value = Math.max(0, currentTime.value - 1); // time doesn't go negative
   }, 1000);
 }
 
@@ -32,19 +34,20 @@ function reset() {
   hours.value = 0;
   minutes.value = 0;
   seconds.value = 0;
+  currentTime.value = 0;
 }
 
 // Watch for changes in the startingTime, and reset the timer if it reaches 0
-watch(startingTime, (newVal) => {
+watch(currentTime, (newVal) => {
   if (newVal <= 0) {
     reset();
   }
 });
 
-function formatTime(startingTime: number) {
-  const hours = `0${Math.floor(startingTime / 3600)}`.slice(-2);
-  const minutes = `0${Math.floor((startingTime % 3600) / 60)}`.slice(-2);
-  const seconds = `0${startingTime % 60}`.slice(-2);
+function formatTime(time: number) {
+  const hours = `0${Math.floor(time / 3600)}`.slice(-2);
+  const minutes = `0${Math.floor((time % 3600) / 60)}`.slice(-2);
+  const seconds = `0${time % 60}`.slice(-2);
   return `${hours}:${minutes}:${seconds}`;
 }
 
@@ -53,7 +56,7 @@ function formatTime(startingTime: number) {
 <template>
   <div>
     <h1>Final Countdown</h1>
-    <h2 v-if="state === 'running' || state === 'paused'">{{ formatTime(startingTime) }}</h2>
+    <h2 v-if="state === 'running' || state === 'paused'">{{ formatTime(currentTime) }}</h2>
     <div>
       <label for="hours">Hour(s):</label>
       <input type="number" id="hours" v-model="hours" min="0" max="24" />
