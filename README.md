@@ -22,7 +22,8 @@
 
 # Usage
 
-- tba
+- link to site
+- https://averynewhart.github.io/final-countdown/
 
 ## Questions
 
