@@ -28,6 +28,13 @@ function pause() {
   clearInterval(interval.value);
 }
 
+function resume() {
+  state.value = "running";
+  interval.value = setInterval(() => {
+    currentTime.value = Math.max(0, currentTime.value - 1); // time doesn't go negative
+  }, 1000);
+}
+
 function reset() {
   state.value = "stopped";
   clearInterval(interval.value);
@@ -68,7 +75,8 @@ function formatTime(time: number) {
     <div class="but-div">
       <button v-if="state === 'stopped'" @click="start">Start</button>
       <button v-if="state === 'running'" @click="pause">Pause</button>
-      <button v-if="state === 'paused'" @click="start">Resume</button>
+      <button v-if="state === 'paused'" @click="start">Restart</button>
+      <button v-if="state === 'paused'" @click="resume">Resume</button>
       <button v-if="state === 'running' || state === 'paused'" @click="reset">Reset</button>
     </div>
   </div>
