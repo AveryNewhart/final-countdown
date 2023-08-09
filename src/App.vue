@@ -62,22 +62,22 @@ function formatTime(time: number) {
 
 <template>
   <div>
-    <h1>Final Countdown</h1>
-    <h2 v-if="state === 'running' || state === 'paused'">{{ formatTime(currentTime) }}</h2>
+    <h1 class="mainHead">Final Countdown</h1>
+    <h2 class="timerBox" v-if="state === 'running' || state === 'paused'">{{ formatTime(currentTime) }}</h2>
     <div>
-      <label for="hours">Hour(s):</label>
-      <input type="number" id="hours" v-model="hours" min="0" max="24" />
-      <label for="minutes">Minute(s):</label>
-      <input type="number" id="minutes" v-model="minutes" min="0" max="60" />
-      <label for="seconds">Second(s):</label>
-      <input type="number" id="seconds" v-model="seconds" min="0" max="60" />
+      <label class="labels" for="hours">Hour(s):</label>
+      <input class="inputs" type="number" id="hours" v-model="hours" min="0" max="24" />
+      <label class="labels" for="minutes">Minute(s):</label>
+      <input class="inputs" type="number" id="minutes" v-model="minutes" min="0" max="60" />
+      <label class="labels" for="seconds">Second(s):</label>
+      <input class="inputs" type="number" id="seconds" v-model="seconds" min="0" max="60" />
     </div>
     <div class="but-div">
-      <button v-if="state === 'stopped'" @click="start">Start</button>
-      <button v-if="state === 'running'" @click="pause">Pause</button>
-      <button v-if="state === 'paused'" @click="start">Restart</button>
-      <button v-if="state === 'paused'" @click="resume">Resume</button>
-      <button v-if="state === 'running' || state === 'paused'" @click="reset">Reset</button>
+      <button class="startClick" v-if="state === 'stopped'" @click="start">Start</button>
+      <button class="pauseClick" v-if="state === 'running'" @click="pause">Pause</button>
+      <button class="restartClick" v-if="state === 'paused'" @click="start">Restart Timer</button>
+      <button class="startClick" v-if="state === 'paused'" @click="resume">Resume</button>
+      <button class="resetClick" v-if="state === 'running' || state === 'paused'" @click="reset">Reset</button>
     </div>
   </div>
 </template>
@@ -87,6 +87,53 @@ function formatTime(time: number) {
 
 .but-div {
   margin-top: 15px;
+}
+
+.mainHead {
+  background-color: #0A210F;
+  padding: 15px;
+  border-radius: 10px;
+  color: #B0B57D;
+}
+
+.timerBox {
+  color: #0A210F;
+  font-size: 40px;
+}
+
+.labels {
+  background-color: #0A210F;
+  padding: 5px;
+  color: #B0B57D;
+  border-radius: 10px;
+}
+
+.inputs {
+  padding: 5px;
+  border-radius: 10px;
+  width: 50px;
+  background-color: #B0B57D;
+  color: #0A210F;
+}
+
+.startClick {
+  background-color: #0A210F;
+  color: #B0B57D;
+}
+
+.pauseClick {
+  background-color: rgb(84, 1, 1);
+  color: #B0B57D;
+}
+
+.restartClick {
+  background-color: #B0B57D;
+  color: #0A210F;
+}
+
+.resetClick {
+  background-color: rgb(0, 0, 71);
+  color: #B0B57D;
 }
 
 </style>
